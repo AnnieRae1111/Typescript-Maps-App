@@ -1,16 +1,13 @@
-// import { User } from './User'
-// import { Company } from './Company'
+import { User } from './User'
+import { Company } from './Company'
+import { CustomMap } from "./CustomMap";
+
+const user = new User()
+const company = new Company()
+const customMap = new CustomMap('map')
+
+// customMap.addUserMarker(user)
+// customMap.addCompanyMarker(company)
 
 
 
-
-new google.maps.Map(document.getElementById('map'), {
-  //this is the options object 
-  zoom: 1,
-  center: {
-    lat: 0,
-    lng: 0,
-  }
-})
-//need to pass in mapDiv argument
-//create an HTLM element to house the map and pass a reference to it as the first argument
