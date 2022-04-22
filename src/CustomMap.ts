@@ -1,15 +1,20 @@
-import { User } from "./User"
-import { Company } from "./Company"
+// import { User } from "./User"
+// import { Company } from "./Company"
 
 //instructors to every other class to how they can be an argument to add marker. how they can qualify to being mappable /added to the map
 //the below interface is saying that any other class that has a location with a lat and lng that are numbers, they can be added to the map 
+//this means that if we say add another class for a park or hospital and those classes have a location, lat lng, then they are mappable. 
 
-interface Mappable {
+export interface Mappable {
   location: {
     lat:number;
     lng:number
   }
+  markerContent(): string;
+  color: string;
+  
 }
+
 
 
 //create a cusotm map class to limit functionality
@@ -61,15 +66,24 @@ export class CustomMap {
 //this is a solution but its not the best one because its not super scalable
 //best solution is make an interface that define how other classes can be accepted as an argument to addMarker
   addMarker(mappable: Mappable): void {
-    new google.maps.Marker({
+    const marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
         lat: mappable.location.lat,
         lng: mappable.location.lng
       }
 
+
     })
 
+      marker.addListener('click', ()=> {
+        const infoWindow = new google.maps.InfoWindow({
+          content: mappable.markerContent()
+
+        })
+        infoWindow.open(this.googleMap, marker)
+        //once the marker is clicked, open the infowindow
+      })
   }
 
 

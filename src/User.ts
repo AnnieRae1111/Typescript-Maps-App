@@ -1,13 +1,16 @@
 import faker from 'faker'
+import { Mappable } from './CustomMap';
 
-export class User {
+//adding the implement key word is basically like asking typescript to help us make sure that every User has the properties of the Mappable interface
+
+export class User implements Mappable {
   name: string;
   location: {
     lat:number;
     lng:number
   };
 
-  //we have to initialize 
+  color: string = 'blue'
 
   constructor(){
     this.name = faker.name.firstName()
@@ -15,5 +18,9 @@ export class User {
       lat: parseFloat(faker.address.latitude()),
       lng: parseFloat(faker.address.longitude())
     }
+  }
+
+  markerContent(): string {
+    return `User Name: ${this.name}`
   }
 }

@@ -136882,19 +136882,24 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.User = void 0;
 
-var faker_1 = __importDefault(require("faker"));
+var faker_1 = __importDefault(require("faker")); //adding the implement key word is basically like asking typescript to help us make sure that every User has the properties of the Mappable interface
+
 
 var User =
 /** @class */
 function () {
-  //we have to initialize 
   function User() {
+    this.color = 'blue';
     this.name = faker_1.default.name.firstName();
     this.location = {
       lat: parseFloat(faker_1.default.address.latitude()),
       lng: parseFloat(faker_1.default.address.longitude())
     };
   }
+
+  User.prototype.markerContent = function () {
+    return "User Name: ".concat(this.name);
+  };
 
   return User;
 }();
@@ -136920,6 +136925,7 @@ var Company =
 /** @class */
 function () {
   function Company() {
+    this.color = 'red';
     this.companyName = faker_1.default.company.companyName();
     this.catchPhrase = faker_1.default.company.catchPhrase();
     this.location = {
@@ -136928,12 +136934,17 @@ function () {
     };
   }
 
+  Company.prototype.markerContent = function () {
+    return "\n    <div>\n    <h1>Company Name: ".concat(this.companyName, "</h1>\n    <h3> Catchphrase: ").concat(this.catchPhrase, "</h3>\n    </div>\n    ");
+  };
+
   return Company;
 }();
 
 exports.Company = Company;
 },{"faker":"../../../../node_modules/faker/index.js"}],"src/CustomMap.ts":[function(require,module,exports) {
-"use strict";
+"use strict"; // import { User } from "./User"
+// import { Company } from "./Company"
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -136982,12 +136993,20 @@ function () {
 
 
   CustomMap.prototype.addMarker = function (mappable) {
-    new google.maps.Marker({
+    var _this = this;
+
+    var marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
         lat: mappable.location.lat,
         lng: mappable.location.lng
       }
+    });
+    marker.addListener('click', function () {
+      var infoWindow = new google.maps.InfoWindow({
+        content: mappable.markerContent()
+      });
+      infoWindow.open(_this.googleMap, marker); //once the marker is clicked, open the infowindow
     });
   };
 
@@ -137010,8 +137029,9 @@ var CustomMap_1 = require("./CustomMap");
 
 var user = new User_1.User();
 var company = new Company_1.Company();
-var customMap = new CustomMap_1.CustomMap('map'); // customMap.addUserMarker(user)
-// customMap.addCompanyMarker(company)
+var customMap = new CustomMap_1.CustomMap('map');
+customMap.addMarker(user);
+customMap.addMarker(company);
 },{"./User":"src/User.ts","./Company":"src/Company.ts","./CustomMap":"src/CustomMap.ts"}],"../../../../.npm-global/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
